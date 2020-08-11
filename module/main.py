@@ -8,7 +8,7 @@ def scripts(url, command):
     尊重原作者意愿，该判断逻辑未作修改，无授权勿测试。
     """
     if "gov.cn" in url or "edu.cn" in url:
-        print("[-]存在敏感域名，停止检测，请使用其他工具或自行手工检测,抱歉")
+        print("[-]存在敏感域名，停止检测，请使用其他工具或自行手工检测，抱歉。")
         return
     processed = processor.process(url, command)
 

