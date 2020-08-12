@@ -1,4 +1,4 @@
-# ShiroScan_Plus
+# ShiroScanPlus
 ShiroScan_Plus是基于sv3nbeast/ShiroScan改进的增强版的Shiro反序列化一键检测工具
  
 ## 声明

