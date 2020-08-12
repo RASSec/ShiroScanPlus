@@ -21,7 +21,7 @@ class Idea(object):
             for plugin_name in self.PLUGINS.keys():
                 try:
                     print("[*]开始检测模块", plugin_name)
-                    self.PLUGINS[plugin_name]().process(url, command, 20)
+                    self.PLUGINS[plugin_name]().process(url, command, 5)
                 except Exception as err:
                     print(err)
                     print(

