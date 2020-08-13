@@ -15,6 +15,7 @@ ShiroScan_Plus是基于sv3nbeast/ShiroScan改进的增强版的Shiro反序列化
 4. 用[**Koalr**](https://github.com/zema1) 的利用链 CommonsCollectionsK1到K4替代CommonsCollections1到7
 5. 为了Windows用户方便安装pycrypto，requirements_windows.txt中采用了pycryptodome==3.9.8
 6. 增加参数解析，增加DNSLog验证、URL文件批量处理、输出到文件等功能，多个功能可以配合使用。  
+7. 移除原作者新加的30个key，移除一个重复key，保留20个key。
 
 ## 原改动内容  
 
