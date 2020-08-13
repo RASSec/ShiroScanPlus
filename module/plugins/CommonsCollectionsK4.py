@@ -9,7 +9,7 @@ import requests
 
 from Crypto.Cipher import AES
 
-from module.main import Idea
+from module.scripts import Idea
 
 requests.packages.urllib3.disable_warnings()
 JAR_FILE = 'data/ysoserial_Koalr.jar'

